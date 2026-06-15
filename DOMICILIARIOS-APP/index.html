@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domiciliarios</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ══════════════════════════════
+         PANTALLA: LOGIN
+    ══════════════════════════════ -->
+    <div id="login-screen" class="screen">
+      <div class="login-container">
+
+        <div class="login-brand">
+          <div class="brand-icon">
+            <i data-lucide="truck"></i>
+          </div>
+          <h1>Domiciliarios</h1>
+          <p class="subtitle">Sistema de entregas</p>
+        </div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="username">
+              <i data-lucide="user" class="input-icon"></i>
+              Usuario
+            </label>
+            <input
+              type="text"
+              id="username"
+              required
+              placeholder="Ingresa tu usuario"
+              autocomplete="username"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">
+              <i data-lucide="lock" class="input-icon"></i>
+              Contraseña
+            </label>
+            <input
+              type="password"
+              id="password"
+              required
+              placeholder="••••••••"
+              autocomplete="current-password"
+            >
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <i data-lucide="log-in" class="btn-icon"></i>
+            Iniciar sesión
+          </button>
+
+          <div id="login-error" class="error"></div>
+        </form>
+
+      </div>
+    </div><!-- /login-screen -->
+
+
+    <!-- ══════════════════════════════
+         PANTALLA: HOME
+    ══════════════════════════════ -->
+    <div id="home-screen" class="screen hidden">
+
+      <!-- Header -->
+      <div class="app-header">
+        <div class="header-top">
+          <div class="header-left">
+            <div class="user-avatar">
+              <i data-lucide="user-circle"></i>
+            </div>
+            <div class="header-info">
+              <h2 id="user-name">Usuario</h2>
+              <p class="header-subtitle">Domiciliario activo</p>
+            </div>
+          </div>
+          <button id="logout-btn" class="btn-icon-only" title="Cerrar sesión" aria-label="Cerrar sesión">
+            <i data-lucide="log-out"></i>
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-primary">
+              <i data-lucide="package"></i>
+            </div>
+            <div class="stat-info">
+              <p class="stat-value" id="pedidos-count">0</p>
+              <p class="stat-label">Pedidos</p>
+            </div>
+          </div>
+          <div class="stat-card stat-green">
+            <div class="stat-icon stat-icon-success">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <div class="stat-info">
+              <p class="stat-value" id="completados-count">0</p>
+              <p class="stat-label">Completados</p>
+            </div>
+          </div>
+          <div class="stat-card stat-orange" id="estadisticas-btn" style="cursor: pointer;">
+            <div class="stat-icon stat-icon-warning">
+              <i data-lucide="bar-chart-2"></i>
+            </div>
+            <div class="stat-info">
+              <p class="stat-value">Ver</p>
+              <p class="stat-label">Estadísticas</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+          <button class="tab active" data-tab="pedidos">
+            <i data-lucide="inbox" class="tab-icon"></i>
+            Pedidos
+          </button>
+        </div>
+      </div><!-- /app-header -->
+
+      <!-- Lista de pedidos -->
+      <div id="pedidos-list" class="pedidos-list">
+        <div class="loading-state">
+          <i data-lucide="loader-2" class="spinner"></i>
+          <p>Cargando pedidos...</p>
+        </div>
+      </div>
+
+    </div><!-- /home-screen -->
+
+
+    <!-- ══════════════════════════════
+         PANTALLA: DETALLE DE PEDIDO
+    ══════════════════════════════ -->
+    <div id="pedido-screen" class="screen hidden">
+
+      <div class="screen-header">
+        <button id="back-btn" class="btn-back" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <h2>Detalle del pedido</h2>
+      </div>
+
+      <div id="pedido-detail" class="pedido-detail-scroll"></div>
+
+      <div class="actions-container">
+        <button id="cerrar-pedido-btn" class="btn-primary btn-large">
+          <i data-lucide="check-circle" class="btn-icon"></i>
+          Cerrar pedido
+        </button>
+      </div>
+
+    </div><!-- /pedido-screen -->
+
+
+    <!-- ══════════════════════════════
+         MODAL: SELECCIÓN DE MÉTODO DE PAGO
+    ══════════════════════════════ -->
+    <div id="pago-modal" class="modal hidden">
+      <div class="modal-overlay" id="pago-modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Seleccionar método de pago</h3>
+          <button id="cerrar-modal-btn" class="btn-close" aria-label="Cerrar">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="metodos-pago">
+            <label class="metodo-pago-option">
+              <input type="radio" name="metodo_pago" value="efectivo" checked>
+              <div class="metodo-pago-card">
+                <div class="metodo-icon">
+                  <i data-lucide="banknote"></i>
+                </div>
+                <div class="metodo-info">
+                  <span class="metodo-nombre">Efectivo</span>
+                  <span class="metodo-desc">Pago en efectivo</span>
+                </div>
+                <div class="metodo-check">
+                  <i data-lucide="check"></i>
+                </div>
+              </div>
+            </label>
+            <label class="metodo-pago-option">
+              <input type="radio" name="metodo_pago" value="datafono">
+              <div class="metodo-pago-card">
+                <div class="metodo-icon">
+                  <i data-lucide="credit-card"></i>
+                </div>
+                <div class="metodo-info">
+                  <span class="metodo-nombre">Datafono</span>
+                  <span class="metodo-desc">Tarjeta débito/crédito</span>
+                </div>
+                <div class="metodo-check">
+                  <i data-lucide="check"></i>
+                </div>
+              </div>
+            </label>
+            <label class="metodo-pago-option">
+              <input type="radio" name="metodo_pago" value="transferencia">
+              <div class="metodo-pago-card">
+                <div class="metodo-icon">
+                  <i data-lucide="smartphone"></i>
+                </div>
+                <div class="metodo-info">
+                  <span class="metodo-nombre">Transferencia</span>
+                  <span class="metodo-desc">Nequi/Daviplata</span>
+                </div>
+                <div class="metodo-check">
+                  <i data-lucide="check"></i>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="cancelar-pago-btn" class="btn-secondary">Cancelar</button>
+          <button id="confirmar-pago-btn" class="btn-primary">Confirmar</button>
+        </div>
+      </div>
+    </div><!-- /pago-modal -->
+
+
+    <!-- ══════════════════════════════
+         PANTALLA: ESTADÍSTICAS
+    ══════════════════════════════ -->
+    <div id="estadisticas-screen" class="screen hidden">
+
+      <div class="screen-header">
+        <button id="estadisticas-back-btn" class="btn-back" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <h2>Estadísticas del Domiciliario</h2>
+      </div>
+
+      <div class="estadisticas-content">
+        <!-- Fondo inicial -->
+        <div class="consolidado-section">
+          <div class="consolidado-section-title">
+            <i data-lucide="wallet"></i>
+            Fondo Inicial (Préstamo)
+          </div>
+          <div class="consolidado-value" id="cons-fondo-inicial">$ 0</div>
+        </div>
+
+        <!-- Resumen del periodo -->
+        <div class="consolidado-section">
+          <div class="consolidado-section-title">
+            <i data-lucide="bar-chart-2"></i>
+            Resumen del Periodo
+          </div>
+          <div class="consolidado-grid">
+            <div class="consolidado-item">
+              <span class="consolidado-label">Número de Facturas</span>
+              <span class="consolidado-value" id="cons-num-facturas">0</span>
+            </div>
+            <div class="consolidado-item">
+              <span class="consolidado-label">Total Ventas</span>
+              <span class="consolidado-value" id="cons-total-ventas">$ 0</span>
+            </div>
+            <div class="consolidado-item">
+              <span class="consolidado-label">Total Efectivo</span>
+              <span class="consolidado-value" id="cons-total-efectivo">$ 0</span>
+            </div>
+            <div class="consolidado-item">
+              <span class="consolidado-label">Total Datafono</span>
+              <span class="consolidado-value" id="cons-total-datafono">$ 0</span>
+            </div>
+            <div class="consolidado-item">
+              <span class="consolidado-label">Total Transferencia</span>
+              <span class="consolidado-value" id="cons-total-transferencia">$ 0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Efectivo a entregar -->
+        <div class="consolidado-section consolidado-highlight">
+          <div class="consolidado-section-title">
+            <i data-lucide="banknote"></i>
+            💰 Efectivo a Entregar
+          </div>
+          <div class="consolidado-value-large" id="cons-efectivo-entregar">$ 0</div>
+          <div class="consolidado-subtitle" id="cons-efectivo-subtitle"></div>
+        </div>
+
+        <!-- Facturas del periodo -->
+        <div class="consolidado-section">
+          <div class="consolidado-section-title">
+            <i data-lucide="file-text"></i>
+            Facturas del Periodo
+          </div>
+          <div class="facturas-table">
+            <div class="facturas-header">
+              <span>Factura</span>
+              <span>Cliente</span>
+              <span>Efectivo</span>
+              <span>Datafono</span>
+              <span>Transferencia</span>
+            </div>
+            <div id="facturas-list">
+              <p class="muted">Cargando...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /estadisticas-screen -->
+
+  </div><!-- /app -->
+
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
