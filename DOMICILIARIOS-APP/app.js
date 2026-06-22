@@ -2,7 +2,7 @@
 // DOMICILIARIOS APP — Lógica principal
 // ============================================================
 
-const API_URL = 'https://palpitate-mystify-lifting.ngrok-free.dev/api';
+const API_URL = 'https://hz2h71ts-3001.use.devtunnels.ms/api';
 
 // ── Estado ──────────────────────────────────────────────────
 let currentUser   = null;
